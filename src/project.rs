@@ -2,7 +2,10 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize)]
+#[derive(Clone)]
+#[derive(Deserialize)]
+#[derive(Default)]
 pub struct SoftwareProject {
     // Project ids are based on the reverse DNS notation, and
     // are either derived from build manifests found in the project

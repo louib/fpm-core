@@ -32,6 +32,10 @@ pub struct SoftwareProject {
     // in the project's repository.
     pub flatpak_module_manifests: HashSet<String>,
 
+    // A list of the paths of known flatpak sources definition manifests found
+    // in the project's repository.
+    pub flatpak_sources_manifests: HashSet<String>,
+
     // A list of the sources from which a project was discovered.
     pub sources: HashSet<String>,
 
@@ -54,20 +58,31 @@ impl SoftwareProject {
         for vcs_url in &other_project.vcs_urls {
             self.vcs_urls.insert(vcs_url.to_string());
         }
+        for build_system in &other_project.build_systems {
+            self.build_systems.insert(build_system.to_string());
+        }
         for app_manifest in &other_project.flatpak_app_manifests {
             self.flatpak_app_manifests.insert(app_manifest.to_string());
         }
         for module_manifest in &other_project.flatpak_module_manifests {
             self.flatpak_module_manifests.insert(module_manifest.to_string());
         }
-        for build_system in &other_project.build_systems {
-            self.build_systems.insert(build_system.to_string());
+        for source in &other_project.sources {
+            self.sources.insert(source.to_string());
         }
-        // TODO validate that the root hashes are the same!
     }
 
     pub fn supports_flatpak(&self) -> bool {
-        return !self.flatpak_app_manifests.is_empty() || !self.flatpak_module_manifests.is_empty();
+        if !self.flatpak_app_manifests.is_empty() {
+            return true;
+        }
+        if !self.flatpak_module_manifests.is_empty() {
+            return true;
+        }
+        if !self.flatpak_sources_manifests.is_empty() {
+            return true;
+        }
+        return false;
     }
 
     pub fn get_main_vcs_url(&self) -> String {

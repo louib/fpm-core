@@ -47,6 +47,12 @@ pub struct SoftwareProject {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub last_known_commit: Option<String>,
 
+    // When the project's main branch was last updated
+    // in the local git checkout of the project.
+    // Stored as an ISO datetime string.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_updated: Option<String>,
+
     // The root git commit hashes associated with the project. This is used
     // for project de-duplication, in the case a project has multiple remote
     // git repositories. I used a vector instead of a set, because

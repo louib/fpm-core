@@ -71,8 +71,21 @@ impl SoftwareProject {
             self.flatpak_module_manifests
                 .insert(module_manifest.to_string());
         }
+        for source_manifest in &other_project.flatpak_sources_manifests {
+            self.flatpak_sources_manifests
+                .insert(source_manifest.to_string());
+        }
         for source in &other_project.sources {
             self.sources.insert(source.to_string());
+        }
+        if let Some(description) = &other_project.description {
+            self.description = Some(description.clone());
+        }
+        if let Some(commit) = &other_project.last_known_commit {
+            self.last_known_commit = Some(commit.clone());
+        }
+        if let Some(main_branch) = &other_project.main_branch {
+            self.main_branch = Some(main_branch.clone());
         }
     }
 

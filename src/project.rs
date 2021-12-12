@@ -47,7 +47,12 @@ pub struct SoftwareProject {
     pub build_systems: HashSet<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub default_branch: Option<String>,
+    pub main_branch: Option<String>,
+
+    // Hash of the latest commit on the main branch seen during the
+    // latest update of the project.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_known_commit: Option<String>,
 
     // The root git commit hashes associated with the project. This is used
     // for project de-duplication, in the case a project has multiple remote

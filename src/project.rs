@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Clone, Deserialize, Default)]
+#[derive(Clone, Deserialize, Serialize, Default)]
 pub struct SoftwareProject {
     // Project ids are based on the reverse DNS notation, and
     // are either derived from build manifests found in the project
@@ -87,11 +87,15 @@ impl SoftwareProject {
         if let Some(description) = &other_project.description {
             self.description = Some(description.clone());
         }
-        if let Some(commit) = &other_project.last_known_commit {
-            self.last_known_commit = Some(commit.clone());
+        if let Some(last_known_commit) = &other_project.last_known_commit {
+            self.last_known_commit = Some(last_known_commit.clone());
         }
         if let Some(main_branch) = &other_project.main_branch {
             self.main_branch = Some(main_branch.clone());
+        }
+        // TODO maybe we should preserve the most recent one instead.
+        if let Some(last_updated) = &other_project.last_updated {
+            self.last_updated = Some(last_updated.clone());
         }
     }
 

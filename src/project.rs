@@ -51,7 +51,6 @@ pub struct SoftwareProject {
     // for project de-duplication, in the case a project has multiple remote
     // git repositories. I used a vector instead of a set, because
     // I believe it's possible to have two ancestors with the same hash.
-    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub root_hashes: Vec<String>,
 }
 impl SoftwareProject {

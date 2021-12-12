@@ -2,10 +2,7 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize)]
-#[derive(Clone)]
-#[derive(Deserialize)]
-#[derive(Default)]
+#[derive(Serialize, Clone, Deserialize, Default)]
 pub struct SoftwareProject {
     // Project ids are based on the reverse DNS notation, and
     // are either derived from build manifests found in the project
@@ -20,26 +17,33 @@ pub struct SoftwareProject {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
 
+    #[serde(skip_serializing_if = "HashSet::is_empty")]
     pub web_urls: HashSet<String>,
 
+    #[serde(skip_serializing_if = "HashSet::is_empty")]
     pub vcs_urls: HashSet<String>,
 
     // A list of the paths of known flatpak app manifests found
     // in the project's repository.
+    #[serde(skip_serializing_if = "HashSet::is_empty")]
     pub flatpak_app_manifests: HashSet<String>,
 
     // A list of the paths of known flatpak module definition manifests found
     // in the project's repository.
+    #[serde(skip_serializing_if = "HashSet::is_empty")]
     pub flatpak_module_manifests: HashSet<String>,
 
     // A list of the paths of known flatpak sources definition manifests found
     // in the project's repository.
+    #[serde(skip_serializing_if = "HashSet::is_empty")]
     pub flatpak_sources_manifests: HashSet<String>,
 
     // A list of the sources from which a project was discovered.
+    #[serde(skip_serializing_if = "HashSet::is_empty")]
     pub sources: HashSet<String>,
 
     // All the build systems that are known to be supported by the project.
+    #[serde(skip_serializing_if = "HashSet::is_empty")]
     pub build_systems: HashSet<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -47,7 +51,9 @@ pub struct SoftwareProject {
 
     // The root git commit hashes associated with the project. This is used
     // for project de-duplication, in the case a project has multiple remote
-    // git repositories.
+    // git repositories. I used a vector instead of a set, because
+    // I believe it's possible to have two ancestors with the same hash.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
     pub root_hashes: Vec<String>,
 }
 impl SoftwareProject {
@@ -65,7 +71,8 @@ impl SoftwareProject {
             self.flatpak_app_manifests.insert(app_manifest.to_string());
         }
         for module_manifest in &other_project.flatpak_module_manifests {
-            self.flatpak_module_manifests.insert(module_manifest.to_string());
+            self.flatpak_module_manifests
+                .insert(module_manifest.to_string());
         }
         for source in &other_project.sources {
             self.sources.insert(source.to_string());

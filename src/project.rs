@@ -2,7 +2,10 @@ use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Deserialize, Serialize, Default)]
+#[derive(Clone)]
+#[derive(Deserialize)]
+#[derive(Serialize)]
+#[derive(Default)]
 pub struct SoftwareProject {
     // Project ids are based on the reverse DNS notation, and
     // are either derived from build manifests found in the project
@@ -74,12 +77,10 @@ impl SoftwareProject {
             self.flatpak_app_manifests.insert(app_manifest.to_string());
         }
         for module_manifest in &other_project.flatpak_module_manifests {
-            self.flatpak_module_manifests
-                .insert(module_manifest.to_string());
+            self.flatpak_module_manifests.insert(module_manifest.to_string());
         }
         for source_manifest in &other_project.flatpak_sources_manifests {
-            self.flatpak_sources_manifests
-                .insert(source_manifest.to_string());
+            self.flatpak_sources_manifests.insert(source_manifest.to_string());
         }
         for source in &other_project.sources {
             self.sources.insert(source.to_string());

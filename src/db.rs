@@ -3,8 +3,8 @@ use std::env;
 use std::fs;
 use std::path;
 
-use flatpak_rs::flatpak_manifest::FlatpakModuleDescription;
 use crate::project::SoftwareProject;
+use flatpak_rs::flatpak_manifest::FlatpakModuleDescription;
 
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 pub const REPOS_DB_SUBDIR: &str = "/repositories";

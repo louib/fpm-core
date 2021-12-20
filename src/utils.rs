@@ -1,7 +1,7 @@
 use std::collections::hash_map::DefaultHasher;
+use std::fs;
 use std::hash::{Hash, Hasher};
 use std::path::Path;
-use std::fs;
 
 pub fn get_module_hash(module: &flatpak_rs::flatpak_manifest::FlatpakModuleDescription) -> String {
     // TODO maybe this should go into flatpak_rs??

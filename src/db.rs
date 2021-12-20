@@ -63,10 +63,10 @@ impl Database {
     }
 
     pub fn get_db_path() -> String {
-        if let Ok(path) = env::var("FR_DB_DIR") {
+        if let Ok(path) = env::var("FPM_DB_DIR") {
             return path.to_string();
         }
-        panic!("Please define the data directory with FR_DB_DIR!");
+        panic!("Please define the data directory with FPM_DB_DIR!");
     }
 
     pub fn get_projects_db_path() -> String {

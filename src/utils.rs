@@ -31,9 +31,6 @@ pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
 }
 
 pub fn get_build_system(file_path: String) -> Option<String> {
-    if file_path.ends_with("Makefile") {
-        return Some("make".to_string());
-    }
     if file_path.ends_with("CMakeLists.txt") {
         return Some("cmake".to_string());
     }
@@ -46,14 +43,30 @@ pub fn get_build_system(file_path: String) -> Option<String> {
     if file_path.ends_with(".pro") {
         return Some("qmake".to_string());
     }
-    if file_path.ends_with("meson.build") {
+    if file_path.ends_with("meson.build") || file_path.ends_with("meson_options.txt") {
         return Some("meson".to_string());
     }
-    if file_path.ends_with("Cargo.toml") {
+    if file_path.ends_with("Cargo.toml") || file_path.ends_with("Cargo.lock") {
         return Some("cargo".to_string());
     }
     if file_path.ends_with("pom.xml") {
         return Some("maven".to_string());
     }
+    if file_path.ends_with("debian/control") {
+        return Some("debian".to_string());
+    }
+    if file_path.ends_with("snapcraft.yml") || file_path.ends_with("snapcraft.yaml") {
+        return Some("snap".to_string());
+    }
+    if file_path.ends_with("package.json") || file_path.ends_with("package-lock.json") {
+        return Some("npm".to_string());
+    }
+    if file_path.ends_with("pyproject.toml") {
+        return Some("pip".to_string());
+    }
+    if file_path.ends_with("vcpkg.json") {
+        return Some("vcpkg".to_string());
+    }
+
     None
 }

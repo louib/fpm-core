@@ -3,6 +3,7 @@ use std::env;
 use std::fs;
 use std::path;
 
+use crate::module::SoftwareModule;
 use crate::project::SoftwareProject;
 use flatpak_rs::flatpak_manifest::FlatpakModuleDescription;
 
@@ -13,7 +14,7 @@ pub const MANIFESTS_DB_SUBDIR: &str = "/manifests";
 
 pub struct Database {
     pub indexed_projects: BTreeMap<String, SoftwareProject>,
-    pub modules: Vec<FlatpakModuleDescription>,
+    pub modules: Vec<SoftwareModule>,
 }
 impl Database {
     pub fn get_database() -> Database {
@@ -47,7 +48,7 @@ impl Database {
         let mut updateable_module_count = 0;
 
         for module in &self.modules {
-            if module.uses_external_data_checker() {
+            if module.flatpak_module.uses_external_data_checker() {
                 updateable_module_count += 1;
             }
         }
@@ -119,7 +120,7 @@ impl Database {
         projects
     }
 
-    pub fn get_all_modules() -> Vec<FlatpakModuleDescription> {
+    pub fn get_all_modules() -> Vec<SoftwareModule> {
         let modules_path = Database::get_modules_db_path();
         let modules_path = path::Path::new(&modules_path);
         let all_modules_paths = match crate::utils::get_all_paths(modules_path) {
@@ -129,7 +130,7 @@ impl Database {
                 return vec![];
             }
         };
-        let mut modules: Vec<FlatpakModuleDescription> = vec![];
+        let mut modules: Vec<SoftwareModule> = vec![];
         for module_path in all_modules_paths.iter() {
             let module_path_str = module_path.to_str().unwrap();
             if !module_path.is_file() {
@@ -162,8 +163,13 @@ impl Database {
     pub fn search_modules(&self, search_term: &str) -> Vec<&FlatpakModuleDescription> {
         let mut modules: Vec<&FlatpakModuleDescription> = vec![];
         for module in &self.modules {
-            if module.name.to_lowercase().contains(&search_term.to_lowercase()) {
-                modules.push(&module);
+            if module
+                .flatpak_module
+                .name
+                .to_lowercase()
+                .contains(&search_term.to_lowercase())
+            {
+                modules.push(&module.flatpak_module);
             }
         }
         modules
@@ -173,6 +179,8 @@ impl Database {
 
     pub fn add_module(&mut self, new_module: FlatpakModuleDescription) {
         let module_hash = crate::utils::get_module_hash(&new_module);
+        let mut new_software_module = SoftwareModule::default();
+        new_software_module.flatpak_module = new_module;
 
         let modules_path = Database::get_modules_db_path();
         let new_module_path = format!("{}/{}.yaml", modules_path, module_hash);
@@ -183,7 +191,10 @@ impl Database {
             // update a file that exists.
             return;
         }
-        match fs::write(new_module_fs_path, serde_yaml::to_string(&new_module).unwrap()) {
+        match fs::write(
+            new_module_fs_path,
+            serde_yaml::to_string(&new_software_module).unwrap(),
+        ) {
             Ok(content) => content,
             Err(e) => {
                 eprintln!(
@@ -193,7 +204,7 @@ impl Database {
                 );
             }
         };
-        self.modules.push(new_module);
+        self.modules.push(new_software_module);
     }
 
     pub fn update_project(&mut self, project: &SoftwareProject) {

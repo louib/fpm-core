@@ -1,5 +1,6 @@
 pub mod db;
 pub mod logger;
+pub mod module;
 pub mod project;
 pub mod utils;
 

@@ -41,8 +41,9 @@ pub struct SoftwareProject {
     // in the project's repository.
     pub flatpak_sources_manifests: HashSet<String>,
 
-    // A list of the sources from which a project was discovered.
-    pub sources: HashSet<String>,
+    // A list of tags associated with the project.
+    // Those include the sources from which a project was discovered.
+    pub tags: HashSet<String>,
 
     // All the build systems that are known to be supported by the project.
     pub build_systems: HashSet<String>,
@@ -99,8 +100,8 @@ impl SoftwareProject {
         for source_manifest in &other_project.flatpak_sources_manifests {
             self.flatpak_sources_manifests.insert(source_manifest.to_string());
         }
-        for source in &other_project.sources {
-            self.sources.insert(source.to_string());
+        for tag in &other_project.tags {
+            self.tags.insert(tag.to_string());
         }
         if let Some(description) = &other_project.description {
             self.description = Some(description.clone());

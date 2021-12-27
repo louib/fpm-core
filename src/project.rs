@@ -9,9 +9,14 @@ use serde::{Deserialize, Serialize};
 pub struct SoftwareProject {
     // Project ids are based on the reverse DNS notation, and
     // are either derived from build manifests found in the project
-    // using the same reverse DNS notation, or from the git urls
-    // associated with the project.
+    // using the same reverse DNS notation, or from the urls
+    // of version-control systems (VCS) repositories associated
+    // with the project.
     pub id: String,
+
+    // This is the main URL of the project, and also the one
+    // that was used to generate the project id.
+    pub vcs_url: String,
 
     // Common name of the software project.
     pub name: String,
@@ -64,6 +69,18 @@ pub struct SoftwareProject {
 }
 impl SoftwareProject {
     pub fn merge(&mut self, other_project: &SoftwareProject) {
+        if (self.id != other_project.id) {
+            panic!(
+                "Cannot merge projects with different IDs! {} != {}",
+                self.id, other_project.id
+            );
+        }
+        if (self.vcs_url != other_project.vcs_url) {
+            panic!(
+                "Cannot merge projects with different VCS URLs! {} != {}",
+                self.vcs_url, other_project.vcs_url
+            );
+        }
         for web_url in &other_project.web_urls {
             self.web_urls.insert(web_url.to_string());
         }

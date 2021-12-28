@@ -58,6 +58,9 @@ pub fn get_build_system(file_path: String) -> Option<String> {
     if file_path.ends_with("snapcraft.yml") || file_path.ends_with("snapcraft.yaml") {
         return Some("snap".to_string());
     }
+    if file_path.ends_with("go.mod") || file_path.ends_with("go.sum") {
+        return Some("go".to_string());
+    }
     if file_path.ends_with("package.json") || file_path.ends_with("package-lock.json") {
         return Some("npm".to_string());
     }

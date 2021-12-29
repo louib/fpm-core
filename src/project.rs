@@ -137,9 +137,6 @@ impl SoftwareProject {
     }
 
     pub fn get_main_vcs_url(&self) -> String {
-        for vcs_url in &self.vcs_urls {
-            return vcs_url.to_string();
-        }
-        panic!();
+        return self.vcs_url.to_string();
     }
 }

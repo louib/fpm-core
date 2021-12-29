@@ -144,4 +144,12 @@ impl SoftwareProject {
     pub fn get_main_vcs_url(&self) -> String {
         return self.vcs_url.to_string();
     }
+
+    pub fn get_root_signature(&self) -> String {
+        let mut root_signature: String = "".to_string();
+        for root_hash in &self.root_hashes {
+            root_signature += root_hash;
+        }
+        root_signature
+    }
 }

@@ -113,6 +113,11 @@ impl SoftwareProject {
                 self.root_hashes.push(hash.clone());
             }
         }
+        if let Some(siblings) = &other_project.siblings {
+            if self.siblings.is_none() {
+                self.siblings = other_project.siblings.clone();
+            }
+        }
         if let Some(description) = &other_project.description {
             self.description = Some(description.clone());
         }

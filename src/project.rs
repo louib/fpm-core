@@ -29,6 +29,11 @@ pub struct SoftwareProject {
 
     pub vcs_urls: HashSet<String>,
 
+    // A set of all the known siblings. Sibling have the same
+    // root hashes fingerprint, but could be forks.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub siblings: Option<HashSet<String>>,
+
     // A list of the paths of known flatpak app manifests found
     // in the project's repository.
     pub flatpak_app_manifests: HashSet<String>,

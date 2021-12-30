@@ -60,10 +60,22 @@ impl Database {
     }
 
     pub fn get_db_path() -> String {
-        if let Ok(path) = env::var("FPM_DB_DIR") {
-            return path.to_string();
+        let DEFAULT_DB_PATH: String = match env::var("HOME") {
+            Ok(h) => format!("{}/.fpm-db", h),
+            Err(_e) => ".fpm-db".to_string(),
+        };
+
+        let db_path = match env::var("FPM_DB_DIR") {
+            Ok(p) => p,
+            Err(_e) => {
+                log::warn!("FPM_DB_DIR is not defined. Defaulting to {}.", DEFAULT_DB_PATH);
+                return DEFAULT_DB_PATH;
+            }
+        };
+        if let Err(e) = fs::create_dir_all(&db_path) {
+            panic!("Could not initialize DB directory: {}.", e);
         }
-        panic!("Please define the data directory with FPM_DB_DIR!");
+        db_path
     }
 
     pub fn get_projects_db_path() -> String {

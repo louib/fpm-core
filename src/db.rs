@@ -8,7 +8,6 @@ use crate::project::SoftwareProject;
 use flatpak_rs::flatpak_manifest::FlatpakModuleDescription;
 
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
-pub const REPOS_DB_SUBDIR: &str = "/repositories";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
 pub const MANIFESTS_DB_SUBDIR: &str = "/manifests";
 
@@ -19,9 +18,6 @@ pub struct Database {
 impl Database {
     pub fn get_database() -> Database {
         if let Err(e) = fs::create_dir_all(Database::get_projects_db_path()) {
-            panic!("Could not initialize database directory: {}.", e);
-        }
-        if let Err(e) = fs::create_dir_all(Database::get_repos_db_path()) {
             panic!("Could not initialize database directory: {}.", e);
         }
         if let Err(e) = fs::create_dir_all(Database::get_manifests_db_path()) {
@@ -72,10 +68,6 @@ impl Database {
 
     pub fn get_projects_db_path() -> String {
         Database::get_db_path() + PROJECTS_DB_SUBDIR
-    }
-
-    pub fn get_repos_db_path() -> String {
-        Database::get_db_path() + REPOS_DB_SUBDIR
     }
 
     pub fn get_manifests_db_path() -> String {

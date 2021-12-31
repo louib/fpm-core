@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+use flatpak_rs::flatpak_manifest::FlatpakModuleDescription;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone)]
@@ -156,5 +158,10 @@ impl SoftwareProject {
             root_signature += root_hash;
         }
         root_signature
+    }
+
+    pub fn get_default_modules(&self) -> Vec<FlatpakModuleDescription> {
+        let mut response = vec![];
+        response
     }
 }

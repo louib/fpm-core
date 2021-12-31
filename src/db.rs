@@ -68,7 +68,7 @@ impl Database {
         let db_path = match env::var("FPM_DB_DIR") {
             Ok(p) => p,
             Err(_e) => {
-                log::warn!("FPM_DB_DIR is not defined. Defaulting to {}.", DEFAULT_DB_PATH);
+                log::debug!("FPM_DB_DIR is not defined. Defaulting to {}.", DEFAULT_DB_PATH);
                 return DEFAULT_DB_PATH;
             }
         };

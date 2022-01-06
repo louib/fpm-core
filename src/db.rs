@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::env;
 use std::fs;
+use std::mem;
 use std::path;
 
 use crate::module::SoftwareModule;
@@ -51,12 +52,21 @@ impl Database {
         response += &format!("Modules supporting updates: {}.\n", updateable_module_count);
 
         response += &format!("Projects: {}.", self.indexed_projects.len());
+        response += &format!("Database in-memory size: {}.", self.get_database_memory_size());
         // TODO print type stats.
         // TODO print archive type stats.
         // TODO print build system stats.
         // TODO print domain (URL domain) stats.
         // TODO add the number of archive urls.
+
         response
+    }
+
+    pub fn get_database_memory_size(&self) -> usize {
+        let mut db_size = 0;
+        db_size += mem::size_of_val(&self.modules);
+        db_size += mem::size_of_val(&self.indexed_projects);
+        return db_size;
     }
 
     pub fn get_db_path() -> String {

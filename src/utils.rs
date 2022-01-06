@@ -73,3 +73,23 @@ pub fn get_build_system(file_path: String) -> Option<String> {
 
     None
 }
+
+///```
+///let formatted_bytes = fpm_core::utils::format_bytes(100);
+///assert_eq!(formatted_bytes, "100 B");
+///let formatted_bytes = fpm_core::utils::format_bytes(23746178);
+///assert_eq!(formatted_bytes, "22 MB");
+///let formatted_bytes = fpm_core::utils::format_bytes(9823453784599);
+///assert_eq!(formatted_bytes, "8 TB");
+///```
+pub fn format_bytes(bytes: usize) -> String {
+    let SIZES: Vec<&str> = vec!["B", "KB", "MB", "GB", "TB"];
+
+    let mut i = 0;
+    let mut approximated_bytes = bytes;
+    while i < 5 && approximated_bytes >= 1024 {
+        i += 1;
+        approximated_bytes = approximated_bytes / 1024;
+    }
+    return format!("{} {}", approximated_bytes, SIZES[i]);
+}

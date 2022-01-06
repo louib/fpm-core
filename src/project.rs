@@ -79,13 +79,13 @@ pub struct SoftwareProject {
 }
 impl SoftwareProject {
     pub fn merge(&mut self, other_project: &SoftwareProject) {
-        if (self.id != other_project.id) {
+        if self.id != other_project.id {
             panic!(
                 "Cannot merge projects with different IDs! {} != {}",
                 self.id, other_project.id
             );
         }
-        if (self.vcs_url != other_project.vcs_url) {
+        if self.vcs_url != other_project.vcs_url {
             panic!(
                 "Cannot merge projects with different VCS URLs! {} != {}",
                 self.vcs_url, other_project.vcs_url

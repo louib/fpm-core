@@ -35,7 +35,11 @@ impl Database {
             indexed_projects: Database::get_indexed_projects(),
         };
         let loading_duration = before_loading.elapsed();
-        log::info!("Loading the database took {}s.", loading_duration.as_secs());
+        if loading_duration.as_secs() == 0 {
+            log::info!("Loading the database took {}ms.", loading_duration.as_millis());
+        } else {
+            log::info!("Loading the database took {}s.", loading_duration.as_secs());
+        }
 
         database
     }

@@ -3,6 +3,7 @@ use std::env;
 use std::fs;
 use std::mem;
 use std::path;
+use std::time::{Duration, Instant};
 
 use crate::module::SoftwareModule;
 use crate::project::SoftwareProject;
@@ -28,14 +29,23 @@ impl Database {
             panic!("Could not initialize database directory: {}.", e);
         }
 
+        let before_loading = Instant::now();
+        let database = Database {
+            modules: Database::get_all_modules(),
+            indexed_projects: Database::get_indexed_projects(),
+        };
+        let loading_duration = before_loading.elapsed();
+        log::info!("Loading the database took {}s.", loading_duration.as_secs());
+
+        database
+    }
+
+    pub fn get_indexed_projects() -> BTreeMap<String, SoftwareProject> {
         let mut indexed_projects: BTreeMap<String, SoftwareProject> = BTreeMap::new();
         for project in Database::get_all_projects() {
             indexed_projects.insert(project.id.clone(), project);
         }
-        Database {
-            modules: Database::get_all_modules(),
-            indexed_projects: indexed_projects,
-        }
+        indexed_projects
     }
 
     pub fn get_stats(&self) -> String {

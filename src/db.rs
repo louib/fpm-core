@@ -52,7 +52,10 @@ impl Database {
         response += &format!("Modules supporting updates: {}.\n", updateable_module_count);
 
         response += &format!("Projects: {}.\n", self.indexed_projects.len());
-        response += &format!("Database in-memory size: {}B.", self.get_database_memory_size());
+        response += &format!(
+            "Database in-memory size: {}.",
+            crate::utils::format_bytes(self.get_database_memory_size())
+        );
         // TODO print type stats.
         // TODO print archive type stats.
         // TODO print build system stats.

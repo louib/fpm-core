@@ -64,8 +64,13 @@ impl Database {
 
     pub fn get_database_memory_size(&self) -> usize {
         let mut db_size = 0;
-        db_size += mem::size_of_val(&self.modules);
-        db_size += mem::size_of_val(&self.indexed_projects);
+        for module in &self.modules {
+            db_size += mem::size_of_val(module);
+        }
+        for (project_id, project) in &self.indexed_projects {
+            db_size += mem::size_of_val(project_id);
+            db_size += mem::size_of_val(project);
+        }
         return db_size;
     }
 

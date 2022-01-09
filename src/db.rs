@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::collections::HashSet;
 use std::env;
 use std::fs;
 use std::mem;
@@ -71,7 +72,9 @@ impl Database {
             crate::utils::format_bytes(self.get_database_memory_size())
         );
 
+        let mut root_signatures: HashSet<String> = HashSet::new();
         let mut unmined_projects = 0;
+        let mut projects_with_siblings = 0;
         let mut projects_with_build_systems: i64 = 0;
         let mut build_systems_count: BTreeMap<String, i64> = BTreeMap::new();
         for (project_id, project) in &self.indexed_projects {
@@ -85,6 +88,18 @@ impl Database {
             for build_system in &project.build_systems {
                 let new_build_system_count = build_systems_count.get(build_system).unwrap_or(&0) + 1;
                 build_systems_count.insert(build_system.to_string(), new_build_system_count);
+            }
+
+            let root_signature = project.get_root_signature();
+            if root_signature.len() == 0 {
+                continue;
+            }
+            root_signatures.insert(root_signature);
+
+            if let Some(siblings) = &project.siblings {
+                if siblings.len() != 0 {
+                    projects_with_siblings += 1;
+                }
             }
         }
 
@@ -107,9 +122,19 @@ impl Database {
             );
         }
 
-        // TODO print type stats.
+        response += &format!("{} Unique root signatures.\n", root_signatures.len());
+        response += &format!(
+            "{: <25}: {:>5.2}% ({}/{})\n",
+            "Projects with siblings",
+            (projects_with_siblings as f64 / self.indexed_projects.len() as f64) * 100.0,
+            projects_with_siblings,
+            self.indexed_projects.len(),
+        );
+
+        // TODO print module type stats.
         // TODO print archive type stats.
         // TODO print domain (URL domain) stats.
+        // TODO print domain (URL domain) stats for the main vcs repo.
         // TODO add the number of archive urls.
 
         response

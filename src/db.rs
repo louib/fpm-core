@@ -67,7 +67,7 @@ impl Database {
 
         response += &format!("Projects: {}.\n", self.indexed_projects.len());
         response += &format!(
-            "Database in-memory size: {}.",
+            "Database in-memory size: {}.\n",
             crate::utils::format_bytes(self.get_database_memory_size())
         );
 
@@ -89,7 +89,7 @@ impl Database {
         }
 
         response += &format!(
-            "{:.2}% ({}/{}) of the projects were unmined.\n",
+            "{:.2}% ({}/{}) of the projects are unmined.\n",
             (unmined_projects as f64 / self.indexed_projects.len() as f64) * 100.0,
             unmined_projects,
             self.indexed_projects.len(),

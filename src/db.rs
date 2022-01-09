@@ -375,4 +375,38 @@ impl Database {
     pub fn has_project(&self, project_id: &str) -> bool {
         self.indexed_projects.contains_key(project_id)
     }
+
+    pub fn detect_siblings(&mut self) {
+        // A map of all the known root hash signatures (merged into a single string), mapped to all
+        // the known siblings.
+        let mut siblings_for_root_signature: BTreeMap<String, HashSet<String>> = BTreeMap::new();
+        for (project_id, project) in &self.indexed_projects {
+            if project.root_hashes.len() == 0 {
+                continue;
+            }
+
+            let root_signature = project.get_root_signature();
+            if let Some(siblings) = siblings_for_root_signature.get(&root_signature) {
+                let mut new_siblings = siblings.clone();
+                new_siblings.insert(project_id.clone());
+                siblings_for_root_signature.insert(root_signature, new_siblings);
+            } else {
+                let mut siblings: HashSet<String> = HashSet::new();
+                siblings.insert(project_id.clone());
+                siblings_for_root_signature.insert(root_signature, siblings);
+            }
+        }
+
+        for siblings in siblings_for_root_signature.values() {
+            // No real need to store it when there's only one (self).
+            if siblings.len() <= 1 {
+                continue;
+            }
+            for sibling in siblings.iter() {
+                let mut project = self.get_project(sibling).unwrap().clone();
+                project.siblings = Some(siblings.clone());
+                self.update_project(&project);
+            }
+        }
+    }
 }

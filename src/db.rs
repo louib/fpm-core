@@ -392,11 +392,11 @@ impl Database {
         // the known siblings.
         let mut siblings_for_root_signature: BTreeMap<String, HashSet<String>> = BTreeMap::new();
         for (project_id, project) in &self.indexed_projects {
-            if project.root_hashes.len() == 0 {
+            let root_signature = project.get_root_signature();
+            if root_signature.len() == 0 {
                 continue;
             }
 
-            let root_signature = project.get_root_signature();
             if let Some(siblings) = siblings_for_root_signature.get(&root_signature) {
                 let mut new_siblings = siblings.clone();
                 new_siblings.insert(project_id.clone());

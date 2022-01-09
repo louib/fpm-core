@@ -70,6 +70,23 @@ impl Database {
             "Database in-memory size: {}.",
             crate::utils::format_bytes(self.get_database_memory_size())
         );
+
+        let mut unmined_projects = 0;
+        for (project_id, project) in &self.indexed_projects {
+            if project.root_hashes.len() == 0 {
+                unmined_projects += 1;
+            }
+        }
+
+
+        response += &format!(
+            "{:.2}% ({}/{}) of the projects were unmined.\n",
+            (unmined_projects as f64 / self.indexed_projects.len() as f64) * 100.0,
+            unmined_projects,
+            self.indexed_projects.len(),
+        );
+
+
         // TODO print type stats.
         // TODO print archive type stats.
         // TODO print build system stats.

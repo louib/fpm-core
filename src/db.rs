@@ -72,12 +72,21 @@ impl Database {
         );
 
         let mut unmined_projects = 0;
+        let mut projects_with_build_systems: i64 = 0;
+        let mut build_systems_count: BTreeMap<String, i64> = BTreeMap::new();
         for (project_id, project) in &self.indexed_projects {
             if project.root_hashes.len() == 0 {
                 unmined_projects += 1;
             }
-        }
+            if project.build_systems.len() != 0 {
+                projects_with_build_systems += 1;
+            }
 
+            for build_system in &project.build_systems {
+                let new_build_system_count = build_systems_count.get(build_system).unwrap_or(&0) + 1;
+                build_systems_count.insert(build_system.to_string(), new_build_system_count);
+            }
+        }
 
         response += &format!(
             "{:.2}% ({}/{}) of the projects were unmined.\n",
@@ -85,11 +94,21 @@ impl Database {
             unmined_projects,
             self.indexed_projects.len(),
         );
+        response += &format!(
+            "{:05.2}% of the projects have a build system.\n",
+            (projects_with_build_systems as f64 / self.indexed_projects.len() as f64) * 100.0,
+        );
 
+        for (build_system, build_system_count) in build_systems_count {
+            response += &format!(
+                "{:05.2}% Projects use {}\n",
+                (build_system_count as f64 / self.indexed_projects.len() as f64) * 100.0,
+                build_system,
+            );
+        }
 
         // TODO print type stats.
         // TODO print archive type stats.
-        // TODO print build system stats.
         // TODO print domain (URL domain) stats.
         // TODO add the number of archive urls.
 

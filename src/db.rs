@@ -74,12 +74,17 @@ impl Database {
 
         let mut root_signatures: HashSet<String> = HashSet::new();
         let mut unmined_projects = 0;
+        let mut inaccessible_projects = 0;
         let mut projects_with_siblings = 0;
         let mut projects_with_build_systems: i64 = 0;
         let mut build_systems_count: BTreeMap<String, i64> = BTreeMap::new();
         for (project_id, project) in &self.indexed_projects {
             if project.root_hashes.len() == 0 {
-                unmined_projects += 1;
+                if project.last_updated.is_some() {
+                    inaccessible_projects += 1;
+                } else {
+                    unmined_projects += 1;
+                }
             }
             if project.build_systems.len() != 0 {
                 projects_with_build_systems += 1;
@@ -107,6 +112,12 @@ impl Database {
             "{:.2}% ({}/{}) of the projects are unmined.\n",
             (unmined_projects as f64 / self.indexed_projects.len() as f64) * 100.0,
             unmined_projects,
+            self.indexed_projects.len(),
+        );
+        response += &format!(
+            "{:.2}% ({}/{}) of the projects are inaccessible.\n",
+            (inaccessible_projects as f64 / self.indexed_projects.len() as f64) * 100.0,
+            inaccessible_projects,
             self.indexed_projects.len(),
         );
         response += &format!(

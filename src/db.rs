@@ -372,6 +372,9 @@ impl Database {
             if project.name.contains(&search_term) {
                 projects.push(&project);
             }
+            if project.vcs_url.contains(&search_term) {
+                projects.push(&project);
+            }
         }
         projects
     }

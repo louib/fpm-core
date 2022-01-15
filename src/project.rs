@@ -1,7 +1,8 @@
 use std::collections::HashSet;
 
-use flatpak_rs::build_systems::{FLATPAK_BUILD_SYSTEMS, SIMPLE};
-use flatpak_rs::flatpak_manifest::{FlatpakModuleDescription, FlatpakSource, FlatpakSourceDescription};
+use flatpak_rs::build_system::{FLATPAK_BUILD_SYSTEMS, SIMPLE};
+use flatpak_rs::module::{FlatpakModuleDescription};
+use flatpak_rs::source::{FlatpakSource, FlatpakSourceDescription};
 
 use serde::{Deserialize, Serialize};
 

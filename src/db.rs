@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 
 use crate::module::SoftwareModule;
 use crate::project::SoftwareProject;
-use flatpak_rs::flatpak_manifest::FlatpakModuleDescription;
+use flatpak_rs::module::FlatpakModuleDescription;
 
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 pub const MODULES_DB_SUBDIR: &str = "/modules";

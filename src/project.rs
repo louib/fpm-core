@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use flatpak_rs::build_system::{FLATPAK_BUILD_SYSTEMS, SIMPLE};
+use flatpak_rs::build_system::FlatpakBuildSystem;
 use flatpak_rs::module::FlatpakModuleDescription;
 use flatpak_rs::source::{FlatpakSource, FlatpakSourceDescription};
 
@@ -172,15 +172,16 @@ impl SoftwareProject {
         // TODO also set the mirror urls if available.
 
         for build_system in &self.build_systems {
-            if !FLATPAK_BUILD_SYSTEMS.contains(build_system) {
-                continue;
-            }
-            if build_system == SIMPLE {
-                continue;
-            }
+            let buildsystem = match FlatpakBuildSystem::from_string(build_system) {
+                Err(e) => {
+                    // This is not a build system supported by Flatpak. It's not a big deal.
+                    continue;
+                }
+                Ok(b) => b,
+            };
             let mut derived_module = FlatpakModuleDescription::default();
             derived_module.name = self.id.clone();
-            derived_module.buildsystem = build_system.clone();
+            derived_module.buildsystem = buildsystem;
             derived_module
                 .sources
                 .push(FlatpakSource::Description(git_source.clone()));

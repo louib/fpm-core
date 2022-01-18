@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use flatpak_rs::build_system::FlatpakBuildSystem;
 use flatpak_rs::module::FlatpakModule;
-use flatpak_rs::source::{FlatpakSourceItem, FlatpakSource};
+use flatpak_rs::source::{FlatpakSource, FlatpakSourceItem};
 
 use serde::{Deserialize, Serialize};
 

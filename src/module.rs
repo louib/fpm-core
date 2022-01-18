@@ -7,5 +7,5 @@ use serde::{Deserialize, Serialize};
 pub struct SoftwareModule {
     pub project_id: Option<String>,
 
-    pub flatpak_module: flatpak_rs::module::FlatpakModuleDescription,
+    pub flatpak_module: flatpak_rs::module::FlatpakModule,
 }

@@ -3,7 +3,7 @@ use std::fs;
 use std::hash::{Hash, Hasher};
 use std::path::Path;
 
-pub fn get_module_hash(module: &flatpak_rs::module::FlatpakModuleDescription) -> String {
+pub fn get_module_hash(module: &flatpak_rs::module::FlatpakModule) -> String {
     // TODO maybe this should go into flatpak_rs??
     let mut s = DefaultHasher::new();
     module.hash(&mut s);

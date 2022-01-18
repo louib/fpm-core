@@ -8,7 +8,7 @@ use std::time::{Duration, Instant};
 
 use crate::module::SoftwareModule;
 use crate::project::SoftwareProject;
-use flatpak_rs::module::FlatpakModuleDescription;
+use flatpak_rs::module::FlatpakModule;
 
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
@@ -268,8 +268,8 @@ impl Database {
         modules
     }
 
-    pub fn search_modules(&self, search_term: &str) -> Vec<&FlatpakModuleDescription> {
-        let mut modules: Vec<&FlatpakModuleDescription> = vec![];
+    pub fn search_modules(&self, search_term: &str) -> Vec<&FlatpakModule> {
+        let mut modules: Vec<&FlatpakModule> = vec![];
         for module in &self.modules {
             if module
                 .flatpak_module
@@ -285,7 +285,7 @@ impl Database {
 
     pub fn remove_module() {}
 
-    pub fn add_module(&mut self, new_module: FlatpakModuleDescription) {
+    pub fn add_module(&mut self, new_module: FlatpakModule) {
         let module_hash = crate::utils::get_module_hash(&new_module);
         let mut new_software_module = SoftwareModule::default();
         new_software_module.flatpak_module = new_module;

@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
 use flatpak_rs::build_system::FlatpakBuildSystem;
-use flatpak_rs::module::FlatpakModuleDescription;
-use flatpak_rs::source::{FlatpakSource, FlatpakSourceDescription};
+use flatpak_rs::module::FlatpakModule;
+use flatpak_rs::source::{FlatpakSourceItem, FlatpakSource};
 
 use serde::{Deserialize, Serialize};
 
@@ -162,9 +162,9 @@ impl SoftwareProject {
         root_signature
     }
 
-    pub fn get_default_modules(&self) -> Vec<FlatpakModuleDescription> {
+    pub fn get_default_modules(&self) -> Vec<FlatpakModule> {
         let mut response = vec![];
-        let mut git_source = FlatpakSourceDescription::default();
+        let mut git_source = FlatpakSource::default();
         git_source.url = Some(self.vcs_url.clone());
         if let Some(branch) = &self.main_branch {
             git_source.branch = Some(branch.clone());
@@ -179,12 +179,12 @@ impl SoftwareProject {
                 }
                 Ok(b) => b,
             };
-            let mut derived_module = FlatpakModuleDescription::default();
+            let mut derived_module = FlatpakModule::default();
             derived_module.name = self.id.clone();
             derived_module.buildsystem = buildsystem;
             derived_module
                 .sources
-                .push(FlatpakSource::Description(git_source.clone()));
+                .push(FlatpakSourceItem::Description(git_source.clone()));
             response.push(derived_module);
         }
         response

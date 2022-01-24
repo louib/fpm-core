@@ -15,7 +15,13 @@ pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
 
     let dir_entries = match fs::read_dir(dir) {
         Ok(entries) => entries,
-        Err(err) => return Err(err.to_string()),
+        Err(err) => {
+            return Err(format!(
+                "Could not read dir {}: {}",
+                dir.to_str().unwrap(),
+                err.to_string()
+            ))
+        }
     };
     for entry in dir_entries {
         let entry_path = entry.unwrap().path();

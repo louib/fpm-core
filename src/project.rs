@@ -181,7 +181,7 @@ impl SoftwareProject {
             };
             let mut derived_module = FlatpakModule::default();
             derived_module.name = self.id.clone();
-            derived_module.buildsystem = buildsystem;
+            derived_module.buildsystem = Some(buildsystem);
             derived_module
                 .sources
                 .push(FlatpakSourceItem::Description(git_source.clone()));

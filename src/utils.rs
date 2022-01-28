@@ -3,6 +3,10 @@ use std::fs;
 use std::hash::{Hash, Hasher};
 use std::path::Path;
 
+pub const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder/";
+pub const DEFAULT_FLATPAK_BUILDER_OUTPUT_DIR: &str = ".flatpak-builder-out/";
+pub const DEFAULT_GIT_CACHE_DIR: &str = ".git/";
+
 pub fn get_module_hash(module: &flatpak_rs::module::FlatpakModule) -> String {
     // TODO maybe this should go into flatpak_rs??
     let mut s = DefaultHasher::new();
@@ -25,6 +29,17 @@ pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
     };
     for entry in dir_entries {
         let entry_path = entry.unwrap().path();
+        let entry_path_str = entry_path.to_str().unwrap();
+        if entry_path_str.contains(DEFAULT_GIT_CACHE_DIR) {
+            continue;
+        }
+        if entry_path_str.contains(DEFAULT_FLATPAK_BUILDER_CACHE_DIR) {
+            continue;
+        }
+        if entry_path_str.contains(DEFAULT_FLATPAK_BUILDER_OUTPUT_DIR) {
+            continue;
+        }
+
         if entry_path.is_dir() {
             let mut dir_paths: Vec<std::path::PathBuf> = get_all_paths(&entry_path)?;
             all_paths.append(&mut dir_paths);

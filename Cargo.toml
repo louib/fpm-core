@@ -12,4 +12,4 @@ serde_yaml = "0.8"
 flatpak-rs = "0.9"
 
 log = "0.4"
-simple-logging = "2.0.2"
+simple-logging = "2.0"

@@ -1,13 +1,32 @@
 [package]
 name = "fpm-core"
+authors = ["louib <code@louib.net>"]
+
+repository = "https://github.com/louib/fpm-core"
+description = "Core structs and functions for https://github.com/louib/fpm"
+
+keywords = [
+  "flatpak",
+  "fpm"
+]
+
+license = "MIT"
+readme = "README.md"
+
 version = "0.1.0"
 edition = "2018"
+
+include = [
+  "src/",
+  "README.md",
+  "LICENSE",
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-serde_yaml = "0.8"
+serde_yaml = "0.8.4"
 
 flatpak-rs = "0.9"
 

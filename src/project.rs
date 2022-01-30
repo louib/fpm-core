@@ -119,7 +119,7 @@ impl SoftwareProject {
         }
         if let Some(siblings) = &other_project.siblings {
             if self.siblings.is_none() {
-                self.siblings = other_project.siblings.clone();
+                self.siblings = Some(siblings.clone());
             }
         }
         if let Some(description) = &other_project.description {
@@ -173,7 +173,7 @@ impl SoftwareProject {
 
         for build_system in &self.build_systems {
             let buildsystem = match FlatpakBuildSystem::from_string(build_system) {
-                Err(e) => {
+                Err(_e) => {
                     // This is not a build system supported by Flatpak. It's not a big deal.
                     continue;
                 }

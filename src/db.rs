@@ -4,7 +4,7 @@ use std::env;
 use std::fs;
 use std::mem;
 use std::path;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use crate::module::SoftwareModule;
 use crate::project::SoftwareProject;
@@ -78,7 +78,7 @@ impl Database {
         let mut projects_with_siblings = 0;
         let mut projects_with_build_systems: i64 = 0;
         let mut build_systems_count: BTreeMap<String, i64> = BTreeMap::new();
-        for (project_id, project) in &self.indexed_projects {
+        for (_project_id, project) in &self.indexed_projects {
             if project.root_hashes.len() == 0 {
                 if project.last_updated.is_some() {
                     inaccessible_projects += 1;
@@ -164,7 +164,7 @@ impl Database {
     }
 
     pub fn get_db_path() -> String {
-        let DEFAULT_DB_PATH: String = match env::var("HOME") {
+        let default_db_path: String = match env::var("HOME") {
             Ok(h) => format!("{}/.fpm-db", h),
             Err(_e) => ".fpm-db".to_string(),
         };
@@ -172,8 +172,8 @@ impl Database {
         let db_path = match env::var("FPM_DB_DIR") {
             Ok(p) => p,
             Err(_e) => {
-                log::debug!("FPM_DB_DIR is not defined. Defaulting to {}.", DEFAULT_DB_PATH);
-                return DEFAULT_DB_PATH;
+                log::debug!("FPM_DB_DIR is not defined. Defaulting to {}.", default_db_path);
+                return default_db_path;
             }
         };
         if let Err(e) = fs::create_dir_all(&db_path) {

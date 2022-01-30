@@ -108,7 +108,7 @@ pub fn get_build_system(file_path: String) -> Option<String> {
 ///assert_eq!(formatted_bytes, "0.00 B");
 ///```
 pub fn format_bytes(bytes: usize) -> String {
-    let SIZES: Vec<&str> = vec!["B", "KB", "MB", "GB", "TB"];
+    let sizes: Vec<&str> = vec!["B", "KB", "MB", "GB", "TB"];
 
     let mut i = 0;
     let mut approximated_bytes = bytes as f64;
@@ -116,5 +116,5 @@ pub fn format_bytes(bytes: usize) -> String {
         i += 1;
         approximated_bytes = approximated_bytes / 1024.0;
     }
-    return format!("{:.2} {}", approximated_bytes, SIZES[i]);
+    return format!("{:.2} {}", approximated_bytes, sizes[i]);
 }

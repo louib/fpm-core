@@ -29,7 +29,10 @@ pub fn get_all_paths(dir: &Path) -> Result<Vec<std::path::PathBuf>, String> {
     };
     for entry in dir_entries {
         let entry_path = entry.unwrap().path();
-        let entry_path_str = entry_path.to_str().unwrap();
+        let entry_path_str = match entry_path.to_str() {
+            Some(p) => p,
+            None => continue,
+        };
         if entry_path_str.contains(DEFAULT_GIT_CACHE_DIR) {
             continue;
         }

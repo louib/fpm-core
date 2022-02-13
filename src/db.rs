@@ -58,10 +58,17 @@ impl Database {
         response += &format!("Modules: {}.\n", self.modules.len());
 
         let mut updateable_module_count = 0;
+        let mut module_build_systems_count: BTreeMap<String, i64> = BTreeMap::new();
 
         for module in &self.modules {
             if module.flatpak_module.uses_external_data_checker() {
                 updateable_module_count += 1;
+            }
+            if let Some(build_system) = &module.flatpak_module.buildsystem {
+                let build_system_name = build_system.to_string();
+                let new_build_system_count =
+                    module_build_systems_count.get(&build_system_name).unwrap_or(&0) + 1;
+                module_build_systems_count.insert(build_system_name.to_string(), new_build_system_count);
             }
         }
         response += &format!("Modules supporting updates: {}.\n", updateable_module_count);
@@ -77,7 +84,7 @@ impl Database {
         let mut inaccessible_projects = 0;
         let mut projects_with_siblings = 0;
         let mut projects_with_build_systems: i64 = 0;
-        let mut build_systems_count: BTreeMap<String, i64> = BTreeMap::new();
+        let mut project_build_systems_count: BTreeMap<String, i64> = BTreeMap::new();
         for (_project_id, project) in &self.indexed_projects {
             if project.root_hashes.len() == 0 {
                 if project.last_updated.is_some() {
@@ -91,8 +98,8 @@ impl Database {
             }
 
             for build_system in &project.build_systems {
-                let new_build_system_count = build_systems_count.get(build_system).unwrap_or(&0) + 1;
-                build_systems_count.insert(build_system.to_string(), new_build_system_count);
+                let new_build_system_count = project_build_systems_count.get(build_system).unwrap_or(&0) + 1;
+                project_build_systems_count.insert(build_system.to_string(), new_build_system_count);
             }
 
             let root_signature = project.get_root_signature();
@@ -125,7 +132,7 @@ impl Database {
             (projects_with_build_systems as f64 / self.indexed_projects.len() as f64) * 100.0,
         );
 
-        for (build_system, build_system_count) in build_systems_count {
+        for (build_system, build_system_count) in project_build_systems_count {
             response += &format!(
                 "{:05.2}% Projects use {}\n",
                 (build_system_count as f64 / self.indexed_projects.len() as f64) * 100.0,
@@ -142,6 +149,13 @@ impl Database {
             self.indexed_projects.len(),
         );
 
+        for (build_system, build_system_count) in module_build_systems_count {
+            response += &format!(
+                "{:05.2}% Modules use {}\n",
+                (build_system_count as f64 / self.modules.len() as f64) * 100.0,
+                build_system,
+            );
+        }
         // TODO print module type stats.
         // TODO print archive type stats.
         // TODO print domain (URL domain) stats.

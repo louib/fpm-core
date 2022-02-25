@@ -12,7 +12,6 @@ use flatpak_rs::module::FlatpakModule;
 
 pub const PROJECTS_DB_SUBDIR: &str = "/projects";
 pub const MODULES_DB_SUBDIR: &str = "/modules";
-pub const MANIFESTS_DB_SUBDIR: &str = "/manifests";
 
 pub struct Database {
     pub indexed_projects: BTreeMap<String, SoftwareProject>,
@@ -21,9 +20,6 @@ pub struct Database {
 impl Database {
     pub fn get_database() -> Database {
         if let Err(e) = fs::create_dir_all(Database::get_projects_db_path()) {
-            panic!("Could not initialize database directory: {}.", e);
-        }
-        if let Err(e) = fs::create_dir_all(Database::get_manifests_db_path()) {
             panic!("Could not initialize database directory: {}.", e);
         }
         if let Err(e) = fs::create_dir_all(Database::get_modules_db_path()) {
@@ -198,10 +194,6 @@ impl Database {
 
     pub fn get_projects_db_path() -> String {
         Database::get_db_path() + PROJECTS_DB_SUBDIR
-    }
-
-    pub fn get_manifests_db_path() -> String {
-        Database::get_db_path() + MANIFESTS_DB_SUBDIR
     }
 
     pub fn get_modules_db_path() -> String {

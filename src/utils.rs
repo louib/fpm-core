@@ -1,3 +1,4 @@
+use std::io::{stdin, stdout, Write};
 use std::collections::hash_map::DefaultHasher;
 use std::fs;
 use std::hash::{Hash, Hasher};
@@ -120,4 +121,23 @@ pub fn format_bytes(bytes: usize) -> String {
         approximated_bytes = approximated_bytes / 1024.0;
     }
     return format!("{:.2} {}", approximated_bytes, sizes[i]);
+}
+
+pub fn ask_yes_no_question(question: String) -> bool {
+    let mut answer = String::new();
+    print!("{}? [Y/n]: ", question);
+    let _ = stdout().flush();
+    stdin()
+        .read_line(&mut answer)
+        .expect("Error while reading answer for question.");
+    if let Some('\n') = answer.chars().next_back() {
+        answer.pop();
+    }
+    if let Some('\r') = answer.chars().next_back() {
+        answer.pop();
+    }
+    if answer == "Y" || answer == "y" {
+        return true;
+    }
+    return false;
 }

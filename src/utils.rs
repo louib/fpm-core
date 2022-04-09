@@ -1,7 +1,7 @@
-use std::io::{stdin, stdout, Write};
 use std::collections::hash_map::DefaultHasher;
 use std::fs;
 use std::hash::{Hash, Hasher};
+use std::io::{stdin, stdout, Write};
 use std::path::Path;
 
 pub const DEFAULT_FLATPAK_BUILDER_CACHE_DIR: &str = ".flatpak-builder/";

@@ -13,7 +13,7 @@ keywords = [
 license = "MIT"
 readme = "README.md"
 
-version = "0.6.0"
+version = "0.7.0"
 edition = "2018"
 
 include = [
@@ -28,7 +28,7 @@ include = [
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.8.4"
 
-flatpak-rs = "0.14"
+flatpak-rs = "0.15"
 
 log = "0.4"
 simple-logging = "2.0"
